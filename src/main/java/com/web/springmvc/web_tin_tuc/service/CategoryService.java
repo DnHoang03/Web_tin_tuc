@@ -25,6 +25,10 @@ public class CategoryService {
         return mapToDTO(categoryRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Not found category")));
     }
 
+    public int getCategoryIdByCode(String code) {
+        return categoryRepository.findByCode(code).getId();
+    }
+
     public List<CategoryDTO> getAllCategory() {
         return categoryRepository.findAll().stream().map(this::mapToDTO).toList();
     }

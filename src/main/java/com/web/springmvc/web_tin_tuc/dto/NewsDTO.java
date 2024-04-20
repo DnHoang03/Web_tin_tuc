@@ -1,9 +1,11 @@
 package com.web.springmvc.web_tin_tuc.dto;
+import com.web.springmvc.web_tin_tuc.model.User;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +22,7 @@ public class NewsDTO {
     private String content;
     private String shortDescription;
     private Integer category;
-    private Integer user;
+    private User user;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime createdDate;
 }

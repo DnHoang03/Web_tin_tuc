@@ -1,11 +1,13 @@
 package com.web.springmvc.web_tin_tuc.service;
 
+import com.web.springmvc.web_tin_tuc.config.SecurityUtil;
 import com.web.springmvc.web_tin_tuc.dto.NewsDTO;
 import com.web.springmvc.web_tin_tuc.dto.NewsRespone;
 import com.web.springmvc.web_tin_tuc.exception.CategoryNotFoundException;
 import com.web.springmvc.web_tin_tuc.exception.NewsNotFoundException;
 import com.web.springmvc.web_tin_tuc.exception.UserNotFoundException;
 import com.web.springmvc.web_tin_tuc.model.News;
+import com.web.springmvc.web_tin_tuc.model.User;
 import com.web.springmvc.web_tin_tuc.repository.CategoryRepository;
 import com.web.springmvc.web_tin_tuc.repository.NewsRepository;
 import com.web.springmvc.web_tin_tuc.repository.UserRepository;
@@ -29,7 +31,10 @@ public class NewsService {
 
 
     public NewsDTO createNews(NewsDTO newsDTO) {
+        String username = SecurityUtil.getSessionUser();
+        User user = userRepository.findByUsername(username);
         News addedNews = mapToEntity(newsDTO);
+        newsDTO.setUser(user);
         return mapToDTO(newsRepository.save(addedNews));
     }
 
@@ -49,16 +54,35 @@ public class NewsService {
         return newsRespone;
     }
 
+
+    public NewsRespone getNewsByCategoryId(int pageNumber, int pageSize, int id) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<News> newsPage = newsRepository.findByCategoryId(id, pageable);
+        List<News> news = newsPage.getContent();
+        List<NewsDTO> newsDTOS = news.stream().map(this::mapToDTO).toList();
+        NewsRespone newsRespone = new NewsRespone();
+        newsRespone.setContent(newsDTOS);
+        newsRespone.setPageNumber(newsPage.getNumber());
+        newsRespone.setPageSize(newsPage.getSize());
+        newsRespone.setTotalElement(newsPage.getTotalElements());
+        newsRespone.setTotalPage(newsPage.getTotalPages());
+        newsRespone.setLast(newsPage.isLast());
+        return newsRespone;
+    }
+
     public NewsDTO getNewsById(Integer id) {
         News news = newsRepository.findById(id).orElseThrow(()->new NewsNotFoundException("Not found news"));
         return mapToDTO(news);
     }
 
     public NewsDTO updateNews(NewsDTO newsDTO, Integer id) {
+        String username = SecurityUtil.getSessionUser();
+        User user = userRepository.findByUsername(username);
         News news = newsRepository.findById(id).orElseThrow(()-> new NewsNotFoundException("Not found news"));
         News news1 = mapToEntity(newsDTO);
         news1.setId(id);
         news1.setCreatedDate(news.getCreatedDate());
+        news1.setUser(user);
         newsRepository.save(news1);
         return mapToDTO(news1);
     }
@@ -68,10 +92,6 @@ public class NewsService {
         newsRepository.deleteById(id);
     }
 
-    public List<NewsDTO> getNewsByCategoryId(int categoryId) {
-        List<News>news = newsRepository.findByCategoryId(categoryId);
-        return news.stream().map(this::mapToDTO).toList();
-    }
 
     public List<NewsDTO> searchNewsByTitle(String query) {
         List<News> news = newsRepository.searchNewsByTitle(query);
@@ -86,7 +106,7 @@ public class NewsService {
         newsDTO.setContent(news.getContent());
         newsDTO.setShortDescription(news.getShortDescription());
         newsDTO.setCategory(news.getCategory().getId());
-        newsDTO.setUser(news.getUser().getId());
+        newsDTO.setUser(news.getUser());
         newsDTO.setCreatedDate(news.getCreatedDate());
         return newsDTO;
     }
@@ -97,7 +117,6 @@ public class NewsService {
         news.setThumbnail(newsDTO.getThumbnail());
         news.setContent(newsDTO.getContent());
         news.setShortDescription(newsDTO.getShortDescription());
-        news.setUser(userRepository.findById(newsDTO.getUser()).orElseThrow(()-> new UserNotFoundException("Not found user")));
         news.setCategory(categoryRepository.findById(newsDTO.getCategory()).orElseThrow(()->new CategoryNotFoundException("Not found category")));
         return news;
     }
