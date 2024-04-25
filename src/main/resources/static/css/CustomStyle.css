@@ -1,0 +1,19 @@
+.bg-red {
+    background-color: #bb2d3b;
+}
+
+.default-image {
+    width: 130px;
+    height: 130px;
+}
+
+.card-body {
+    width: 300px;
+    height: 200px;
+}
+
+.card-text-min {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
