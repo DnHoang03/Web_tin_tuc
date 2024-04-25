@@ -1,8 +1,10 @@
 package com.web.springmvc.web_tin_tuc.controller;
 
 import com.web.springmvc.web_tin_tuc.config.SecurityUtil;
+import com.web.springmvc.web_tin_tuc.dto.CategoryDTO;
 import com.web.springmvc.web_tin_tuc.dto.NewsDTO;
 import com.web.springmvc.web_tin_tuc.dto.NewsRespone;
+import com.web.springmvc.web_tin_tuc.dto.UserDTO;
 import com.web.springmvc.web_tin_tuc.model.User;
 import com.web.springmvc.web_tin_tuc.service.CategoryService;
 import com.web.springmvc.web_tin_tuc.service.CommentService;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/news")
+@RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
 
@@ -40,7 +42,7 @@ public class NewsController {
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber
             ,@RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize
             ,Model model) {
-        User user = new User();
+        UserDTO user = new UserDTO();
         String username = SecurityUtil.getSessionUser();
         if(username != null) {
             user = userService.getUserByUsername(username);
@@ -61,10 +63,16 @@ public class NewsController {
             ,@RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize
             ,Model model
             ,@PathVariable(value = "category") String category) {
+        UserDTO user = new UserDTO();
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.getUserByUsername(username);
+        }
         int id = categoryService.getCategoryIdByCode(category);
         NewsRespone newsRespone = newsService.getNewsByCategoryId(pageNumber, pageSize, id);
         List<NewsDTO>news = newsRespone.getContent();
         model.addAttribute("news",news);
+        model.addAttribute("user", user);
         model.addAttribute("totalItems", newsRespone.getTotalElement());
         model.addAttribute("totalPages", newsRespone.getTotalPage());
         model.addAttribute("pageNumber", pageNumber);
@@ -76,25 +84,38 @@ public class NewsController {
     public String createNewsForm(Model model) {
         String username = SecurityUtil.getSessionUser();
         if(username == null) {
-            return "redirect:/api/auth/login";
+            return "redirect:/auth/login";
         }
+        List<CategoryDTO> categoryDTOS = categoryService.getAllCategory();
         NewsDTO newsDTO = new NewsDTO();
         model.addAttribute("newsDTO",newsDTO);
+        model.addAttribute("categories", categoryDTOS);
         return "news-create";
     }
 
     @PostMapping("/create")
     public String createNews(@Valid @ModelAttribute("newsDTO") NewsDTO newsDTO, BindingResult result) {
         if(result.hasErrors()) return "news-create";
-        newsDTO.setCategory(1);
         newsService.createNews(newsDTO);
-        return "redirect:/api/news";
+        return "redirect:/news";
     }
 
     @GetMapping("/search")
-    public String searchNews(@RequestParam(value = "query") String query, Model model) {
-        List<NewsDTO> news = newsService.searchNewsByTitle(query);
-        model.addAttribute("news",news);
+    public String searchNews(@RequestParam(value = "query") String query,
+                             Model model,
+                             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+                             @RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize) {
+        UserDTO user = new UserDTO();
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.getUserByUsername(username);
+        }
+        NewsRespone newsRespone = newsService.searchNewsByTitle(pageNumber, pageSize, query);
+        model.addAttribute("news", newsRespone.getContent());
+        model.addAttribute("user", user);
+        model.addAttribute("totalItems", newsRespone.getTotalElement());
+        model.addAttribute("totalPages", newsRespone.getTotalPage());
+        model.addAttribute("pageNumber", pageNumber);
         return "news-list";
     }
 
@@ -102,10 +123,12 @@ public class NewsController {
     public String updateNews(@PathVariable("id") Integer id, Model model) {
         String username = SecurityUtil.getSessionUser();
         if(username == null) {
-            return "redirect:/api/auth/login";
+            return "redirect:/auth/login";
         }
         NewsDTO newsDTO = newsService.getNewsById(id);
+        List<CategoryDTO> categoryDTOS = categoryService.getAllCategory();
         model.addAttribute("newsDTO", newsDTO);
+        model.addAttribute("categories", categoryDTOS);
         return "news-edit";
     }
 
@@ -113,10 +136,9 @@ public class NewsController {
     public String updateNews(@PathVariable("id") Integer id
             , @Valid @ModelAttribute("newsDTO") NewsDTO newsDTO
             ,BindingResult result) {
-        newsDTO.setCategory(1);
         if(result.hasErrors()) return "news-edit";
         newsService.updateNews(newsDTO, id);
-        return "redirect:/api/news";
+        return "redirect:/news";
     }
 
     @GetMapping("/{id}")
@@ -129,7 +151,7 @@ public class NewsController {
     @GetMapping("/{id}/delete")
     public String deleteNews(@PathVariable("id") Integer id) {
         newsService.deleteNews(id);
-        return "redirect:/api/news";
+        return "redirect:/news";
     }
 
 

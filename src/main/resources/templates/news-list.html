@@ -10,9 +10,6 @@
     <section layout:fragment="body" class="py-5">
         <header class="py-5 bg-light border-bottom mb-4">
             <div class="container">
-                <div th:if="${param.success}" class="alert alert-success">
-                    You are register successfully!
-                </div>
                 <div class="text-center my-5">
                     <h1 class="fw-bolder">Welcome to the news website!</h1>
                 </div>
@@ -40,16 +37,17 @@
                     <div class="row gx-5 mx-3">
                         <div th:each="newItem : ${news}" class="card col-lg-6 mb-2">
                             <div class="position-relative mb-3">
-                                <img class="img-fluid rounded-2" th:src="${newItem.thumbnail}" alt="..." />
-                                <div class="card-body">
-                                    <a th:text="${newItem.title}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">Project name</a>
-                                    <p class="card-text" th:text="${newItem.shortDescription}"></p>
-                                    <div class="small text-muted" th:text="${newItem.createdDate}"></div>
+                                <div class="row">
+                                    <img th:if="${newItem.thumbnail != ''}" class="rounded-2 col-md-6 default-image mt-3" th:src="${newItem.thumbnail}" alt="..."/>
+                                    <div th:class="${newItem.thumbnail != '' ? 'card-body col-md-6':'card-body'}">
+                                        <a th:text="${newItem.title}" class="h6 text-decoration-none link-dark stretched-link" th:href="@{/news/{id}(id = ${newItem.id})}"></a>
+                                        <p class="card-text card-text-min" th:text="${newItem.shortDescription}"></p>
+                                        <div class="small text-muted" th:text="${newItem.createdDate}"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="container mb-3">
-                                <a class="btn btn-primary mr-auto" th:href="@{/api/news/{id}(id = ${newItem.id})}">Read more →</a>
-                                <a class="btn btn-secondary" th:href="@{/api/news/{id}/edit(id = ${newItem.id})}">Edit</a>
+                                <a th:if="${user.id} == ${newItem.user.id}" class="btn btn-primary" th:href="@{/news/{id}/edit(id = ${newItem.id})}">Edit</a>
                             </div>
                         </div>
                     </div>
@@ -60,19 +58,19 @@
                     <nav>
                         <ul class="pagination justify-content-center flex-wrap">
                             <li th:class="${pageNumber > 0 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/api/news}" class="page-link">First</a>
+                                <a th:href="@{/news}" class="page-link">First</a>
                             </li>
                             <li th:class="${pageNumber > 0 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/api/news}" class="page-link">Previous</a>
+                                <a th:href="@{/news}" class="page-link">Previous</a>
                             </li>
                             <li th:each="i: ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber != i ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/api/news(pageNumber=${i})}" class="page-link">[[${i + 1}]]</a>
+                                <a th:href="@{/news(pageNumber=${i})}" class="page-link">[[${i + 1}]]</a>
                             </li>
                             <li th:class="${pageNumber < totalPages - 1 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/api/news(pageNumber=${pageNumber + 1})}" class="page-link">Next</a>
+                                <a th:href="@{/news(pageNumber=${pageNumber + 1})}" class="page-link">Next</a>
                             </li>
                             <li th:class="${pageNumber < totalPages - 1 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/api/news(pageNumber=${totalPages - 1})}" class="page-link">Last</a>
+                                <a th:href="@{/news(pageNumber=${totalPages - 1})}" class="page-link">Last</a>
                             </li>
                         </ul>
                     </nav>
@@ -84,7 +82,7 @@
                         <div class="card-header">Search</div>
                         <div class="card-body">
                             <div class="form-group">
-                                <form th:action="@{/api/news/search}" class="form-inline my-2 my-lg-0 mb-3">
+                                <form th:action="@{/news/search}" class="form-inline my-2 my-lg-0 mb-3">
                                     <div class="input-group">
                                         <input name="query" class="form-control " type="text" placeholder="Seach" aria-label="Search"/>
                                         <button class="btn btn-primary" id="button-search" type="submit">Search</button>
@@ -100,26 +98,26 @@
                             <div class="row">
                                 <div class="col-sm-6 text-center">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'THE-THAO'})}">Thể thao</a></li>
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'CHINH-TRI'})}">Chính trị</a></li>
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'THE-GIOI'})}">Thế giới</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'THE-THAO'})}">Thể thao</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'CHINH-TRI'})}">Chính trị</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'THE-GIOI'})}">Thế giới</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-sm-6 text-center">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'GIAI-TRI'})}">Giải trí</a></li>
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'GOC-NHIN'})}">Góc nhìn</a></li>
-                                        <li><a th:href="@{/api/news/category/{category}(category = ${'SUC-KHOE'})}">Sức khỏe</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'GIAI-TRI'})}">Giải trí</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'GOC-NHIN'})}">Góc nhìn</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'SUC-KHOE'})}">Sức khỏe</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
+<!--                    <div class="card mb-4">-->
+<!--                        <div class="card-header">Side Widget</div>-->
+<!--                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>

@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface NewsRepository extends JpaRepository<News, Integer> {
     @Query("SELECT c FROM News c WHERE c.title LIKE CONCAT('%', :query, '%') ")
-    List<News> searchNewsByTitle(String query);
+    Page<News> searchNewsByTitle(String query, Pageable pageable);
 
     Page<News> findByCategoryId(int categoryId, Pageable pageable);
+
 }

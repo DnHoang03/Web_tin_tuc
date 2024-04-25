@@ -9,7 +9,7 @@
 <main class="flex-shrink-0">
     <section layout:fragment="body" class="py-5">
         <div class="container">
-            <form role="form" method="post" th:action="@{/api/news/{id}/edit(id = ${newsDTO.id})}" th:object="${newsDTO}">
+            <form role="form" method="post" th:action="@{/news/{id}/edit(id = ${newsDTO.id})}" th:object="${newsDTO}">
                 <input type="hidden" th:field="*{id}">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -22,6 +22,13 @@
                                 th:field="*{title}"
                                 placeholder="Title">
                         <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="title">Category</label>
+                        <select class="form-control" id="category" name="category" th:field="*{category}">
+                            <option th:each="categoriesItem:${categories}" th:value="${categoriesItem.id}" th:text="${categoriesItem.name}">
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -46,18 +53,16 @@
                                 placeholder="Short Description">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="content">Content</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="content"
-                            name="content"
-                            th:field="*{content}"
-                            placeholder="Content">
+                    <textarea class="form-control" id="content" name="content" th:field="*{content}" placeholder="Content"></textarea>
                     <p th:if="${#fields.hasErrors('content')}" class="text-danger" th:errors="*{content}">
                 </div>
+                <script>
+                    CKEDITOR.replace('content');
+                </script>
                 <button type="submit" class="btn btn-primary">Edit</button>
+                <a class="btn btn-danger" th:href="@{/news/{id}/delete(id = ${newsDTO.id})}">Delete</a>
             </form>
         </div>
     </section>

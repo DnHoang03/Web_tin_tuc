@@ -29,7 +29,7 @@ import static org.springframework.http.HttpMethod.DELETE;
 public class SecurityConfig {
 
     private final UserDetailServiceImpl userDetailService;
-
+    private final AuthenExceptionConfig authenExceptionConfig;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,15 +40,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
-                        .requestMatchers( "api/**", "/css/**", "/js/**").permitAll())
+                        .requestMatchers( "/**", "/css/**", "/js/**").permitAll())
                 .formLogin(form -> form
-                        .loginPage("/api/auth/login")
-                        .defaultSuccessUrl("/api/news")
-                        .loginProcessingUrl("/api/auth/login")
-                        .failureUrl("/api/auth/login?error=true")
+                        .loginPage("/auth/login")
+                        .defaultSuccessUrl("/news")
+                        .loginProcessingUrl("/auth/login")
+                        .failureHandler(authenExceptionConfig)
                         .permitAll())
                 .logout(logout ->
-                        logout.logoutUrl("/api/auth/logout")
+                        logout.logoutUrl("/auth/logout")
                 );
         return http.build();
     }
@@ -56,4 +56,5 @@ public class SecurityConfig {
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
     }
+
 }

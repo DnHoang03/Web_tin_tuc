@@ -34,7 +34,8 @@ public class NewsService {
         String username = SecurityUtil.getSessionUser();
         User user = userRepository.findByUsername(username);
         News addedNews = mapToEntity(newsDTO);
-        newsDTO.setUser(user);
+        addedNews.setUser(user);
+        addedNews.setCategory(categoryRepository.findById(newsDTO.getCategory()).orElseThrow(() -> new CategoryNotFoundException("Not found category")));
         return mapToDTO(newsRepository.save(addedNews));
     }
 
@@ -70,9 +71,28 @@ public class NewsService {
         return newsRespone;
     }
 
+    public NewsRespone searchNewsByTitle(int pageNumber, int pageSize, String query) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<News> newsPage = newsRepository.searchNewsByTitle(query, pageable);
+        List<News> news = newsPage.getContent();
+        List<NewsDTO> newsDTOS = news.stream().map(this::mapToDTO).toList();
+        NewsRespone newsRespone = new NewsRespone();
+        newsRespone.setContent(newsDTOS);
+        newsRespone.setPageNumber(newsPage.getNumber());
+        newsRespone.setPageSize(newsPage.getSize());
+        newsRespone.setTotalElement(newsPage.getTotalElements());
+        newsRespone.setTotalPage(newsPage.getTotalPages());
+        newsRespone.setLast(newsPage.isLast());
+        return newsRespone;
+    }
+
     public NewsDTO getNewsById(Integer id) {
         News news = newsRepository.findById(id).orElseThrow(()->new NewsNotFoundException("Not found news"));
         return mapToDTO(news);
+    }
+
+    public News getNewsModelById(Integer id) {
+        return newsRepository.findById(id).orElseThrow(()->new NewsNotFoundException("Not found news"));
     }
 
     public NewsDTO updateNews(NewsDTO newsDTO, Integer id) {
@@ -83,6 +103,7 @@ public class NewsService {
         news1.setId(id);
         news1.setCreatedDate(news.getCreatedDate());
         news1.setUser(user);
+        news1.setCategory(categoryRepository.findById(newsDTO.getCategory()).orElseThrow(() -> new CategoryNotFoundException("Not found category")));
         newsRepository.save(news1);
         return mapToDTO(news1);
     }
@@ -92,11 +113,6 @@ public class NewsService {
         newsRepository.deleteById(id);
     }
 
-
-    public List<NewsDTO> searchNewsByTitle(String query) {
-        List<News> news = newsRepository.searchNewsByTitle(query);
-        return news.stream().map(this::mapToDTO).toList();
-    }
 
     private NewsDTO mapToDTO(News news) {
         NewsDTO newsDTO = new NewsDTO();
@@ -117,7 +133,6 @@ public class NewsService {
         news.setThumbnail(newsDTO.getThumbnail());
         news.setContent(newsDTO.getContent());
         news.setShortDescription(newsDTO.getShortDescription());
-        news.setCategory(categoryRepository.findById(newsDTO.getCategory()).orElseThrow(()->new CategoryNotFoundException("Not found category")));
         return news;
     }
 

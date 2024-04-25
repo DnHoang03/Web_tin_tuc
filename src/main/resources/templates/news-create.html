@@ -9,7 +9,7 @@
 <main class="flex-shrink-0">
     <section layout:fragment="body" class="py-5">
         <div class="container">
-            <form role="form" method="post" th:action="@{/api/news/create}" th:object="${newsDTO}">
+            <form role="form" method="post" th:action="@{/news/create}" th:object="${newsDTO}">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="title">Title</label>
@@ -21,6 +21,13 @@
                                 th:field="*{title}"
                                 placeholder="Title">
                         <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="title">Category</label>
+                        <select class="form-control" id="category" name="category" th:field="*{category}">
+                            <option th:each="categoriesItem:${categories}" th:value="${categoriesItem.id}" th:text="${categoriesItem.name}">
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -43,25 +50,22 @@
                                 name="shortDescription"
                                 th:field="*{shortDescription}"
                                 placeholder="Short Description">
+                        <p th:if="${#fields.hasErrors('shortDescription')}" class="text-danger" th:errors="*{shortDescription}">
                     </div>
                 </div>
                 <div class="form-group ">
                     <label for="content">Content</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="content"
-                            name="content"
-                            th:field="*{content}"
-                            placeholder="Content">
+                    <textarea class="form-control" id="content" name="content" th:field="*{content}" placeholder="Content"></textarea>
                     <p th:if="${#fields.hasErrors('content')}" class="text-danger" th:errors="*{content}">
                 </div>
+                <script>
+                    CKEDITOR.replace('content');
+                </script>
                 <button type="submit" class="btn btn-primary">Create</button>
             </form>
         </div>
     </section>
 
 </main>
-
 </body>
 </html>

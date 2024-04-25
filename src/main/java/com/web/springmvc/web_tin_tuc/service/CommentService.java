@@ -16,9 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final NewsRepository newsRepository;
-    private final UserRepository userRepository;
-
+    private final NewsService newsService;
+    private final UserService userService;
 
     public CommentDTO createComment(CommentDTO commentDTO) {
         Comment comment = commentRepository.save(mapToEntity(commentDTO));
@@ -42,8 +41,8 @@ public class CommentService {
     private Comment mapToEntity(CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
-        comment.setNews(newsRepository.findById(commentDTO.getNewsId()).orElseThrow(()-> new NewsNotFoundException("Not found news")));
-        comment.setUser(userRepository.findById(commentDTO.getUserId()).orElseThrow(()-> new UserNotFoundException("Not found user")));
+        comment.setNews(newsService.getNewsModelById(commentDTO.getNewsId()));
+        comment.setUser(userService.getUserById(commentDTO.getUserId()));
         return comment;
     }
 }

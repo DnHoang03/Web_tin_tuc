@@ -1,6 +1,8 @@
 package com.web.springmvc.web_tin_tuc.dto;
+import com.web.springmvc.web_tin_tuc.model.Category;
 import com.web.springmvc.web_tin_tuc.model.User;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +17,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NewsDTO {
     private Integer id;
-    @NotEmpty(message = "News title should not be empty")
+    @Size(min=10, max=85,message = "News title should not be empty (10->85 character)")
     private String title;
     private String thumbnail;
     @NotEmpty(message = "News content should not be empty")
     private String content;
+    @Size(min=10, max=150,message = "News title should not be empty (10->150 character)")
     private String shortDescription;
-    private Integer category;
+    private int category;
     private User user;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime createdDate;

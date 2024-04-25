@@ -16,14 +16,4 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<CommentDTO>> getAllCommentByNewsId(@PathVariable Integer id) {
-        return ResponseEntity.ok(commentService.getAllCommentByNewsId(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
-        return new ResponseEntity<>(commentService.createComment(commentDTO), HttpStatus.CREATED);
-    }
-
 }

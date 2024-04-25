@@ -21,14 +21,16 @@
                 <!-- Blog entries-->
                 <div class="col-lg-8">
                     <!-- Featured blog post-->
-                    <div class="card mb-4">
+                    <div class="card">
                         <a href="#!"><img class="card-img-top" th:src="${newsDTO.thumbnail}" alt="..." /></a>
-                        <div class="card-body">
+                        <div class="card-body col-md-12 mb-4">
                             <div class="small text-muted" th:text="${newsDTO.createdDate}"></div>
-                            <h2 class="card-title">About this news</h2>
-                            <p class="card-text" th:text="${newsDTO.content}"></p>
-                            <a class="btn btn-danger" th:href="@{/api/news/{id}/delete(id = ${newsDTO.id})}">Delete</a>
+                            <h2 class="card-title" th:text="${newsDTO.title}"></h2>
+                            <p class="card-text" th:utext="${newsDTO.shortDescription}"></p>
                         </div>
+                    </div>
+                    <div class="mx-3">
+                        <p th:utext="${newsDTO.content}">
                     </div>
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
@@ -61,28 +63,28 @@
                         <div class="card-header">Categories</div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 text-center">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'THE-THAO'})}">Thể thao</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'CHINH-TRI'})}">Chính trị</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'THE-GIOI'})}">Thế giới</a></li>
                                     </ul>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 text-center">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'GIAI-TRI'})}">Giải trí</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'GOC-NHIN'})}">Góc nhìn</a></li>
+                                        <li><a th:href="@{/news/category/{category}(category = ${'SUC-KHOE'})}">Sức khỏe</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
+<!--                    <div class="card mb-4">-->
+<!--                        <div class="card-header">Side Widget</div>-->
+<!--                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
