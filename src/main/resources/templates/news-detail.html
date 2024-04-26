@@ -32,19 +32,26 @@
                     <div class="mx-3">
                         <p th:utext="${newsDTO.content}">
                     </div>
-                    <!-- Pagination-->
-                    <nav aria-label="Pagination">
-                        <hr class="my-0" />
-                        <ul class="pagination justify-content-center my-4">
-                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
-                            <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">3</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">15</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">Older</a></li>
-                        </ul>
-                    </nav>
+                    <div class="container bg-comment content">
+                        <h3 class="mb3">Comment</h3>
+                        <div class="row mb-3">
+                            <form role="form" method="post" th:action="@{/news/{id}(id = ${newsDTO.id})}" th:object="${comment}" class="form-inline">
+                                <textarea class="form-control col-md-8" id="commentContent" name="commentContent" th:field="*{content}" placeholder="Comment here"></textarea>
+                                <button type="submit" class="btn btn-primary offset-2">Submit</button>
+                            </form>
+                        </div>
+                        <div th:each="commentItem : ${comments}" >
+                            <div class="mb-3">
+                                <div>
+                                    <strong th:text="${commentItem.userDTO.firstName + ' ' + commentItem.userDTO.lastName}"></strong>
+                                </div>
+                                <p th:text="${commentItem.content}"></p>
+                                <div th:if="${commentItem.userDTO.id} == ${user.id}">
+                                    <a class="btn btn-sm btn-primary" th:href="@{/comment/{id}(id=${commentItem.id})}">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">

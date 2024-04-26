@@ -4,6 +4,7 @@ import com.web.springmvc.web_tin_tuc.dto.RegistrationRequest;
 import com.web.springmvc.web_tin_tuc.dto.UserDTO;
 import com.web.springmvc.web_tin_tuc.model.ConfirmationToken;
 import com.web.springmvc.web_tin_tuc.model.Role;
+import com.web.springmvc.web_tin_tuc.model.User;
 import com.web.springmvc.web_tin_tuc.repository.ConfirmationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class RegistrationService {
     private final UserService userService;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     public void register(RegistrationRequest request) {
-        userService.register(new UserDTO(request.getEmail(), request.getUsername(), request.getPassword(), Role.USER.name()));
+        userService.register(new User(request.getUsername(), request.getEmail(), request.getPassword(), Role.USER));
     }
 
     public void confirmToken(String token) {

@@ -1,10 +1,7 @@
 package com.web.springmvc.web_tin_tuc.controller;
 
 import com.web.springmvc.web_tin_tuc.config.SecurityUtil;
-import com.web.springmvc.web_tin_tuc.dto.CategoryDTO;
-import com.web.springmvc.web_tin_tuc.dto.NewsDTO;
-import com.web.springmvc.web_tin_tuc.dto.NewsRespone;
-import com.web.springmvc.web_tin_tuc.dto.UserDTO;
+import com.web.springmvc.web_tin_tuc.dto.*;
 import com.web.springmvc.web_tin_tuc.model.User;
 import com.web.springmvc.web_tin_tuc.service.CategoryService;
 import com.web.springmvc.web_tin_tuc.service.CommentService;
@@ -29,14 +26,7 @@ public class NewsController {
     private final NewsService newsService;
     private final CategoryService categoryService;
     private final UserService userService;
-//    @GetMapping
-//    public ResponseEntity<NewsRespone> getAllNews(
-//            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-//            @RequestParam(value = "pageSize", defaultValue = "5", required = false)int pageSize) {
-//        // Tra ve 1 NewsRespone chua list va cac thong tin lien quan
-//        return ResponseEntity.ok(newsService.getAllNews(pageNumber, pageSize));
-//    }
-
+    private final CommentService commentService;
     @GetMapping
     public String getAllNews(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber
@@ -144,8 +134,29 @@ public class NewsController {
     @GetMapping("/{id}")
     public String newsDetail(@PathVariable("id") Integer id ,Model model) {
         NewsDTO newsDTO = newsService.getNewsById(id);
+        List<CommentDTO> comments = commentService.getAllCommentByNewsId(id);
+        UserDTO user = new UserDTO();
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.getUserByUsername(username);
+        }
+        CommentDTO commentDTO = new CommentDTO();
         model.addAttribute("newsDTO", newsDTO);
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", commentDTO);
+        model.addAttribute("user", user);
         return "news-detail.html";
+    }
+
+    @PostMapping("/{id}")
+    public String newsComment(@PathVariable("id") Integer id, @ModelAttribute("comment") CommentDTO comment, @ModelAttribute("newsDTO") NewsDTO newsDTO) {
+        String username = SecurityUtil.getSessionUser();
+        if(username == null) {
+            return "redirect:/auth/login";
+        }
+        comment.setNewsId(newsDTO.getId());
+        commentService.createComment(comment);
+        return "redirect:/news/{id}";
     }
 
     @GetMapping("/{id}/delete")

@@ -17,3 +17,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.bg-comment {
+    background-color: rgb(252, 250, 246);
+}

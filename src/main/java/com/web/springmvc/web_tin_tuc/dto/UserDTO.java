@@ -12,15 +12,8 @@ public class UserDTO {
     @NotEmpty
     private String email;
     private String username;
-    private String password;
     private String role;
     private String firstName;
     private String lastName;
     private String photoUrl;
-    public UserDTO(String email, String username, String password, String role) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
 }

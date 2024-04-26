@@ -26,11 +26,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
-    public UserDTO register(UserDTO userDTO) {
+    public void register(User userRegister) {
         User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
+        user.setUsername(userRegister.getUsername());
+        user.setPassword(passwordEncoder.encode(userRegister.getPassword()));
+        user.setEmail(userRegister.getEmail());
         user.setRole(Role.USER);
         // TODO: Generate confirmationToken
         String token = UUID.randomUUID().toString();
@@ -45,7 +45,6 @@ public class UserService {
 
 //        TODO: Send email to user with token
         emailService.sendHtmlMessage(user.getUsername(), user.getEmail(), confirmationToken.getToken());
-        return mapToDTO(user);
     }
 
     public User getUserById(Integer id) {
@@ -93,19 +92,17 @@ public class UserService {
             user.setRole(Role.ADMIN);
         }
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setPhotoUrl(userDTO.getPhotoUrl());
         return user;
     }
 
-    private UserDTO mapToDTO(User user) {
+    public UserDTO mapToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
         userDTO.setUsername(user.getUsername());
-        userDTO.setPassword(user.getPassword());
         userDTO.setRole(user.getRole().name());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());

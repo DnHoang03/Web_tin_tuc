@@ -48,4 +48,13 @@ public class GlobalException {
         return new ResponseEntity<ErrorObject>(er, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorObject> userAlreadyExistsException(CommentNotFoundException ex, WebRequest request) {
+        ErrorObject er = new ErrorObject();
+        er.setStatusCode(HttpStatus.NOT_FOUND.value());
+        er.setMessage(ex.getMessage());
+        er.setTimestamp(new Date());
+        return new ResponseEntity<ErrorObject>(er, HttpStatus.NOT_FOUND);
+    }
+
 }
