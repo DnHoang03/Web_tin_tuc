@@ -26,6 +26,5 @@ public class NewsDTO {
     private String shortDescription;
     private int category;
     private User user;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime createdDate;
+    private String createdDate;
 }

@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class UserController {
         return "user-detail";
     }
     @PostMapping
-    public String updateUser(@Valid @ModelAttribute("userEdit") UserDTO userDTO, BindingResult result) {
+    public String updateUser(@Valid @ModelAttribute("userEdit") UserDTO userDTO, BindingResult result) throws IOException {
         if(result.hasErrors()) return "user-detail";
         userService.updateUser(userDTO);
         return "redirect:/user?success";

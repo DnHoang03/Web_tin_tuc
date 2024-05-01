@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+    private final FileUpload fileUploadUtils;
     public void register(User userRegister) {
         User user = new User();
         user.setUsername(userRegister.getUsername());
@@ -47,9 +50,6 @@ public class UserService {
         emailService.sendHtmlMessage(user.getUsername(), user.getEmail(), confirmationToken.getToken());
     }
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Not found user"));
-    }
 
     public void verifyToken(ConfirmationToken confirmationToken) {
         User user = userRepository.findByEmail(confirmationToken.getUser().getEmail());
@@ -69,35 +69,20 @@ public class UserService {
         return mapToDTO(user);
     }
 
-    public void updateUser(UserDTO userDTO) {
+    public void updateUser(UserDTO userDTO) throws IOException {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(()-> new UserNotFoundException("Not found user"));
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setPhotoUrl(userDTO.getPhotoUrl());
+        if(!userDTO.getPhoto().isEmpty()) {
+            fileUploadUtils.uploadImage(userDTO.getPhoto(), user.getId().toString());
+            user.setPhotoUrl("/assets/images/"+ user.getId().toString()+"/"+ StringUtils.cleanPath(userDTO.getPhoto().getOriginalFilename()));
+        }
         userRepository.save(user);
     }
 
     public void deleteUserByEmail(String email) {
         userRepository.deleteByEmail(email);
     }
-    private User mapToEntity(UserDTO userDTO) {
-        User user = new User();
-        if (userDTO.getId() != null) {
-            user.setId(userDTO.getId());
-        }
-        user.setUsername(userDTO.getUsername());
-        if (userDTO.getRole().equals("USER")) {
-            user.setRole(Role.USER);
-        } else {
-            user.setRole(Role.ADMIN);
-        }
-        user.setEmail(userDTO.getEmail());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setPhotoUrl(userDTO.getPhotoUrl());
-        return user;
-    }
-
     public UserDTO mapToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());

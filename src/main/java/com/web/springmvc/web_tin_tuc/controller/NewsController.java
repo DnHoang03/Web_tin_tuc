@@ -41,6 +41,9 @@ public class NewsController {
         List<NewsDTO>news = newsRespone.getContent();
         model.addAttribute("news",news);
         model.addAttribute("user", user);
+        model.addAttribute("newsCT", newsService.getOneNewsByCode("CHINH-TRI"));
+        model.addAttribute("newsGT", newsService.getOneNewsByCode("GIAI-TRI"));
+        model.addAttribute("newsSK", newsService.getOneNewsByCode("SUC-KHOE"));
         model.addAttribute("totalItems", newsRespone.getTotalElement());
         model.addAttribute("totalPages", newsRespone.getTotalPage());
         model.addAttribute("pageNumber", pageNumber);

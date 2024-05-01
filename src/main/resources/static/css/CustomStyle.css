@@ -12,6 +12,11 @@
     height: 200px;
 }
 
+.custom-card {
+    width: 200px;
+    height: 100px;
+}
+
 .card-text-min {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -20,4 +25,14 @@
 
 .bg-comment {
     background-color: rgb(252, 250, 246);
+}
+
+.stick {
+    position: sticky;
+    top: 0; /* Chỉ định vị trí top */
+    background-color: lightyellow; /* Màu nền */
+    z-index: 1000;
+    border: 1px solid transparent; /* Đặt viền ban đầu là trong suốt */
+    border-image: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /* Gradient từ màu đen đậm đến trong suốt */
+    border-image-slice: 1; /* Cắt gradient */
 }

@@ -40,7 +40,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
-                        .requestMatchers( "/**", "/css/**", "/js/**").permitAll())
+                        .requestMatchers( "/news/**", "/css/**", "/js/**", "/user/**", "/category/**", "/comment/**", "/auth/**", "/ckeditor/**", "/assets/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN"))
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .defaultSuccessUrl("/news")

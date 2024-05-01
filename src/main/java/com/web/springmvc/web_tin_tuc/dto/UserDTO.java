@@ -3,6 +3,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -15,5 +16,6 @@ public class UserDTO {
     private String role;
     private String firstName;
     private String lastName;
-    private String photoUrl;
+    private String photoUrl = "/assets/images/customAvatar.jpg";
+    private MultipartFile photo;
 }

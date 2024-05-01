@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -41,7 +43,7 @@ public class NewsService {
 
     public NewsRespone getAllNews(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<News> newsPage = newsRepository.findAll(pageable);
+        Page<News> newsPage = newsRepository.findAllDsc(pageable);
         List<News> news = newsPage.getContent();
         //Map a list<news> to list<newsDTO>
         List<NewsDTO> newsDTOS = news.stream().map(this::mapToDTO).toList();
@@ -95,6 +97,10 @@ public class NewsService {
         return newsRepository.findById(id).orElseThrow(()->new NewsNotFoundException("Not found news"));
     }
 
+    public NewsDTO getOneNewsByCode(String code) {
+        return mapToDTO(newsRepository.findOneByCategory(code));
+    }
+
     public NewsDTO updateNews(NewsDTO newsDTO, Integer id) {
         String username = SecurityUtil.getSessionUser();
         User user = userRepository.findByUsername(username);
@@ -123,7 +129,7 @@ public class NewsService {
         newsDTO.setShortDescription(news.getShortDescription());
         newsDTO.setCategory(news.getCategory().getId());
         newsDTO.setUser(news.getUser());
-        newsDTO.setCreatedDate(news.getCreatedDate());
+        newsDTO.setCreatedDate(formateDatetime(news.getCreatedDate()));
         return newsDTO;
     }
 
@@ -136,4 +142,8 @@ public class NewsService {
         return news;
     }
 
+    private String formateDatetime(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return localDateTime.format(formatter);
+    }
 }
