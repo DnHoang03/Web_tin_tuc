@@ -9,6 +9,7 @@
 <main class="flex-shrink-0">
     <section layout:fragment="body" class="py-5">
         <div class="container">
+            <div th:if="${param.waiting}" class="alert alert-success">Please wait the admin to confirm!</div>
             <form role="form" method="post" th:action="@{/news/create}" th:object="${newsDTO}">
                 <div class="form-row">
                     <div class="form-group col-md-6">

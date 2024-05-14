@@ -25,6 +25,7 @@ public class NewsDTO {
     @Size(min=10, max=150,message = "News title should not be empty (10->150 character)")
     private String shortDescription;
     private int category;
+    private Boolean accepted = false;
     private User user;
     private String createdDate;
 }

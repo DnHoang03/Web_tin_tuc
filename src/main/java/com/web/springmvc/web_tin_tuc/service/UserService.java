@@ -80,6 +80,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+
     public void deleteUserByEmail(String email) {
         userRepository.deleteByEmail(email);
     }

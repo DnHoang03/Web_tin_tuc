@@ -7,6 +7,7 @@ import com.web.springmvc.web_tin_tuc.exception.CategoryNotFoundException;
 import com.web.springmvc.web_tin_tuc.exception.NewsNotFoundException;
 import com.web.springmvc.web_tin_tuc.exception.UserNotFoundException;
 import com.web.springmvc.web_tin_tuc.model.News;
+import com.web.springmvc.web_tin_tuc.model.Role;
 import com.web.springmvc.web_tin_tuc.model.User;
 import com.web.springmvc.web_tin_tuc.repository.CategoryRepository;
 import com.web.springmvc.web_tin_tuc.repository.NewsRepository;
@@ -29,16 +30,28 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-
-
+    private final NewsScrapService newsScrapService;
 
     public NewsDTO createNews(NewsDTO newsDTO) {
         String username = SecurityUtil.getSessionUser();
         User user = userRepository.findByUsername(username);
         News addedNews = mapToEntity(newsDTO);
+        if(user.getRole().equals(Role.ADMIN)) addedNews.setAccepted(true);
         addedNews.setUser(user);
         addedNews.setCategory(categoryRepository.findById(newsDTO.getCategory()).orElseThrow(() -> new CategoryNotFoundException("Not found category")));
         return mapToDTO(newsRepository.save(addedNews));
+    }
+
+    public NewsDTO createScrapNews() {
+        NewsDTO scrapNews = newsScrapService.getFirstNews();
+        if(scrapNews != null && newsRepository.findByTitle(scrapNews.getTitle()) == null) {
+            News addedNews = mapToEntity(scrapNews);
+            addedNews.setAccepted(true);
+            addedNews.setCategory(categoryRepository.findById(scrapNews.getCategory()).orElseThrow(() -> new CategoryNotFoundException("Not found category")));
+            addedNews.setUser(scrapNews.getUser());
+            newsRepository.save(addedNews);
+        }
+        return scrapNews;
     }
 
     public NewsRespone getAllNews(int pageNumber, int pageSize) {

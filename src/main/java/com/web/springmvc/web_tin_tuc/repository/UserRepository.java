@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     void deleteByEmail(String email);
+
+    @Query("SELECT c FROM User c WHERE c.role = 'ADMIN' ")
+    User findByRole();
 }

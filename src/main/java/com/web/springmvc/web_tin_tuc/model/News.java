@@ -23,9 +23,12 @@ public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique = true)
     private String title;
     private String thumbnail;
     private String shortDescription;
+    private Boolean accepted = false;
 
     @Column(columnDefinition = "TEXT")
     private String content;

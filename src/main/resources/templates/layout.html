@@ -23,14 +23,13 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" th:href="@{/news}">Home</a></li>
 <!--                <li class="nav-item"><a class="nav-link" href="contact.html">Option</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="pricing.html">About</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>-->
                 <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/auth/login}">Login</a></li>
                 <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownPortfolio" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPortfolio">
                         <li><a class="dropdown-item" th:href="@{/user}" >Profile</a></li>
                         <li><a class="dropdown-item" th:href="@{/news/create}" >Create news</a></li>
+                        <li sec:authorize="hasAuthority('ADMIN')"><a class="dropdown-item" th:href="@{/admin}">Manage news</a></li>
                         <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
                     </ul>
                 </li>
