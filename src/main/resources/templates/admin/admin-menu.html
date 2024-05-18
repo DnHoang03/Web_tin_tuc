@@ -1,0 +1,69 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <title>Admin</title>
+    <style>
+        .nav-custom {
+            color: #495057;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            background-color: #e9ecef;
+        }
+        .nav-link {
+            color: black;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column ">
+<section layout:fragment="body" class="py-5">
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav flex-column">
+                <li class="nav-item text-center nav-custom">
+                    <a th:href="@{/admin/news/manage}" class="nav-link">
+                        TIN CHỜ DUYỆT
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="row col-md-8 offset-1">
+                    <div class="col-md-6">
+                        <div class="card" style="background-color: #0dcaf0">
+                            <div class="card-body">
+                                <i class="bi bi-newspaper display-6"></i>
+                                TOTAL NEWS
+                                <br>
+                                <br>
+                                <h1 class="text-center" th:text="${totalNews}"></h1>
+                            </div>
+                            <a class="card-footer text-center" th:href="@{/admin/news}">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card" style="background-color: #ffca2c">
+                            <div class="card-body">
+                                <i class="bi bi-person display-6"></i>
+                                TOTAL USERS
+                                <br>
+                                <br>
+                                <h1 class="text-center" th:text="${totalUser}"></h1>
+                            </div>
+                            <a class="card-footer text-center" th:href="@{/admin/users}">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

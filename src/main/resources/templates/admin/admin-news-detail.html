@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <title>Admin news</title>
+</head>
+<body class="d-flex flex-column ">
+<section layout:fragment="body" class="py-5">
+    <header class="py-3 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder" th:text="${newsDTO.title}"></h1>
+                <p class="lead mb-0" th:text="${newsDTO.shortDescription}"></p>
+            </div>
+        </div>
+    </header>
+    <!-- Page content-->
+    <div class="container col-md-8 offset-2">
+        <div class="row">
+            <!-- Blog entries-->
+                <!-- Featured blog post-->
+            <div class="card">
+                <a href="#!"><img class="card-img-top" th:src="${newsDTO.thumbnail}" alt="..." /></a>
+                <div class="card-body col-md-12 mb-4">
+                    <div class="small text-muted" th:text="${newsDTO.createdDate}"></div>
+                    <h2 class="card-title" th:text="${newsDTO.title}"></h2>
+                    <p class="card-text" th:utext="${newsDTO.shortDescription}"></p>
+                </div>
+            </div>
+            <div class="mx-3">
+                <p th:utext="${newsDTO.content}">
+            </div>
+        </div>
+        <div class="col-md-6 offset-5">
+            <div th:if = "${newsDTO.accepted == false}" class="row">
+                <form class="col-md-3" method="post" th:action="@{/admin/news/manage/{id}(id=${newsDTO.id}, result='accept')}">
+                    <button class="btn btn-primary" type="submit" >Accept</button>
+                </form>
+                <form class="col-md-3" method="post" th:action="@{/admin/news/manage/{id}(id=${newsDTO.id}, result='reject')}">
+                    <button class="btn btn-danger" type="submit" >Reject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
