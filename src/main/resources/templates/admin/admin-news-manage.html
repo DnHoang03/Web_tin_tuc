@@ -1,0 +1,52 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <title>News list</title>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body" class="py-3">
+        <!-- Page content-->
+        <div class="container">
+            <div class="row ">
+                <!-- Blog entries-->
+                <div class="text-center mb-5">
+                    <h2 class="fw-bolder">DANH SÁCH TIN TỨC CHỜ XÉT DUYỆT</h2>
+                </div>
+                <!-- Nested row for non-featured blog posts-->
+                <div class="row gx-5 mx-3">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead class="small text-uppercase bg-body text-muted">
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>User</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="align-middle" th:each="newsAc : ${news}">
+                                    <td th:text="${newsAc.title}"></td>
+                                    <td th:text="${newsAc.categoryName}"></td>
+                                    <td th:text="${newsAc.user.firstName+' ' + newsAc.user.lastName}"></td>
+                                    <td><a th:href="@{/admin/news/manage/{id}(id = ${newsAc.id})}">Review</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+                <!-- Side widgets-->
+            </div>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

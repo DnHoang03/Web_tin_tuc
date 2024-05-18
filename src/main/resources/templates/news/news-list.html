@@ -4,52 +4,50 @@
 >
 <head>
     <title>News list</title>
+    <style>
+        .news-carousel {
+            overflow: hidden;
+        }
+        .news-item {
+            margin: 0 10px;
+            padding: 20px;
+            background: #babcbc;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            flex: 0 0 calc(100% / 3 - 20px); /* Đảm bảo hiển thị 3 tin tức trên mỗi hàng */
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body" class="py-3">
-        <header class="py-3 bg-light border-bottom">
-            <div class="container">
-                <div class="text-center my-5">
-                    <h1 class="fw-bolder">Welcome to the news website!</h1>
-                </div>
-            </div>
-        </header>
         <!-- Page content-->
         <div class="row mb-5 stick">
-            <div class="col-md-9">
-                <div class="row mx-3 d-flex ">
-                    <div class="col mt-3 d-flex justify-content-center align-items-center">
-                        <a th:href="@{/news}"><i class="fas fa-home"></i></a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'THE-THAO'})}">Thể thao</a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'CHINH-TRI'})}">Chính trị</a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'THE-GIOI'})}">Thế giới</a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'GIAI-TRI'})}">Giải trí</a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'GOC-NHIN'})}">Góc nhìn</a>
-                    </div>
-                    <div class="col mt-3">
-                        <a th:href="@{/news/category/{category}(category = ${'SUC-KHOE'})}">Sức khỏe</a>
-                    </div>
+            <div class="row d-flex col-md-10 offset-1">
+                <div class="col d-flex justify-content-center align-items-center">
+                    <a th:href="@{/templates/news}"><i class="fas fa-home"></i></a>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <form th:action="@{/news/search}" class=" mt-2" >
-                        <div class="input-group">
-                            <input name="query" class="form-control " type="text" placeholder="Seach" aria-label="Search"/>
-                            <button class="btn btn-primary" id="button-search" type="submit">Search</button>
-                        </div>
-                    </form>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'THE-THAO'})}">Thể thao</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'CHINH-TRI'})}">Chính trị</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'THE-GIOI'})}">Thế giới</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'GIAI-TRI'})}">Giải trí</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'GOC-NHIN'})}">Góc nhìn</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'SUC-KHOE'})}">Sức khỏe</a>
+                </div>
+                <div class="col">
+                    <a th:href="@{/news/category/{category}(category = ${'KINH-DOANH'})}">Kinh doanh</a>
                 </div>
             </div>
         </div>
@@ -85,10 +83,10 @@
                     <nav>
                         <ul class="pagination justify-content-center flex-wrap">
                             <li th:class="${pageNumber > 0 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/news}" class="page-link">First</a>
+                                <a th:href="@{/templates/news}" class="page-link">First</a>
                             </li>
                             <li th:class="${pageNumber > 0 ? 'page-item':'page-item disabled'}">
-                                <a th:href="@{/news}" class="page-link">Previous</a>
+                                <a th:href="@{/news(pageNumber=${pageNumber - 1})}" class="page-link">Previous</a>
                             </li>
                             <li th:each="i: ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber != i ? 'page-item':'page-item disabled'}">
                                 <a th:href="@{/news(pageNumber=${i})}" class="page-link">[[${i + 1}]]</a>
@@ -104,6 +102,15 @@
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">
+                    <div class="form-group">
+                        <form th:action="@{/news/search}" class=" mt-2" >
+                            <div class="input-group">
+                                <input name="query" class="form-control " type="text" placeholder="Nhập nội dung tìm kiếm" aria-label="Search"/>
+                                <button class="btn btn-primary" id="button-search" type="submit" >
+                                    <i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
                     <div class="my-3">
                         <h4 class="fw-bolder mx-1">Chính trị</h4>
                         <div class="row">
@@ -148,6 +155,24 @@
                                 <p th:text="${newsSK.shortDescription}"  style="font-size: smaller"></p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <h4> Thế giới </h4>
+            <div class="row">
+                <div th:each="globalNewss : ${globalNews}" class="col-lg-6 mb-2">
+                    <div class="position-relative mb-3">
+                        <div class="row">
+                            <img th:if="${globalNewss.thumbnail != ''}" class="rounded-2 col-md-6 default-image mt-3" th:src="${globalNewss.thumbnail}" alt="..."/>
+                            <div th:class="${globalNewss.thumbnail != '' ? 'card-body col-md-6':'card-body'}">
+                                <a th:text="${globalNewss.title}" class="h6 text-decoration-none link-dark stretched-link" th:href="@{/news/{id}(id = ${globalNewss.id})}"></a>
+                                <p class="card-text card-text-min" th:text="${globalNewss.shortDescription}"></p>
+                                <div class="small text-muted" th:text="${globalNewss.createdDate}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mb-3">
+                        <a th:if="${user.id} == ${globalNewss.user.id}" class="btn btn-primary" th:href="@{/news/{id}/edit(id = ${globalNewss.id})}">Edit</a>
                     </div>
                 </div>
             </div>

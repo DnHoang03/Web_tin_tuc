@@ -11,11 +11,36 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div th:if="${param.fail}" class="alert alert-danger">Username or email already exist</div>
-                    <div th:if="${param.authen}" class="alert alert-warning">Confirm email to enable account</div>
+                    <div th:if="${param.fail}" class="alert alert-danger">Username hoắc email đã tồn tại!</div>
+                    <div th:if="${param.authen}" class="alert alert-warning">Xác nhận email để kích hoạt tài khoản!</div>
                     <div th:if="${passwordError}" class="text-danger" th:text="${passwordError}"></div>
                         <form role="form" method="post" th:action="@{/auth/register}" th:object="${request}">
                         <!-- Email input -->
+                            <div class="row">
+                                <div class="col-md-6 form-outline mb-4">
+                                    <label for="firstName"> FirstName *</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="firstName"
+                                            name="firstName"
+                                            th:field="*{firstName}"
+                                            placeholder="FirstName"
+                                    />
+                                    <p th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}">
+                                </div>
+                                <div class="col-md-6 form-outline mb-4">
+                                    <label for="lastName"> LastName *</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="lastName"
+                                            name="lastName"
+                                            th:field="*{lastName}"
+                                            placeholder="Lastname"/>
+                                    <p th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}">
+                                </div>
+                            </div>
                         <div class="form-outline mb-4">
                             <label for="email"> Email *</label>
                             <input
@@ -37,7 +62,6 @@
                                     name="username"
                                     th:field="*{username}"
                                     placeholder="Username"
-                                    autocomplete="off"
                             />
                             <p th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username} ">
                         </div>
@@ -52,7 +76,6 @@
                                         name="password"
                                         th:field="*{password}"
                                         placeholder="Password"
-                                        autocomplete="off"
                                 />
                                 <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}">
                             </div>

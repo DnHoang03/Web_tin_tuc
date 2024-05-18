@@ -9,4 +9,8 @@ public class EmailUtils {
     public static String getVerificationUrl(String host, String token) {
         return host + "/auth/register/confirm?token=" + token;
     }
+
+    public static String getResetPasswordUrl(String host, String token, Integer id) {
+        return host + "/auth/reset-password/"+id.toString()+"?token="+token;
+    }
 }

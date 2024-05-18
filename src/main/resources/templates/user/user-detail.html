@@ -19,8 +19,8 @@
                         <hr>
                     </div>
                     <!-- Form START -->
-                    <div th:if="${param.success}" class="alert alert-success">Update success</div>
-                    <form role="form" method="post" th:action="@{/user}" th:object="${userEdit}" enctype="multipart/form-data">
+                    <div th:if="${param.success}" class="alert alert-success">Cập nhật thành công</div>
+                    <form role="form" method="post" th:action="@{/templates/user}" th:object="${userEdit}" enctype="multipart/form-data">
                         <input type="hidden" th:field="*{id}">
                         <div class="row mb-5 gx-5">
                             <!-- Contact detail -->

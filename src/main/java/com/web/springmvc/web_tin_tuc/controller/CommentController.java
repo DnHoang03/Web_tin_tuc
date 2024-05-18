@@ -3,13 +3,9 @@ package com.web.springmvc.web_tin_tuc.controller;
 import com.web.springmvc.web_tin_tuc.dto.CommentDTO;
 import com.web.springmvc.web_tin_tuc.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/comment")
@@ -21,7 +17,7 @@ public class CommentController {
     public String editComment(@PathVariable("id") Integer id, Model model) {
         CommentDTO commentDTO = commentService.getCommentById(id);
         model.addAttribute("comment", commentDTO);
-        return "comment-edit";
+        return "comment/comment-edit";
     }
     @PostMapping("/{id}")
     public String editComment(@PathVariable("id") Integer id,  @ModelAttribute("comment") CommentDTO commentDTO) {

@@ -11,12 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistrationRequest {
-    @NotEmpty(message = "Email must not be empty")
+    @NotEmpty(message = "Email không được bỏ trống")
     private String email;
-    @Size(min = 6, max = 15, message = "Invalid username! (6->15 character)")
+    @Size(min = 6, max = 15, message = "Mật khẩu không hợp lệ! (6->15 ký tự)")
     private String username;
-    @Size(min = 6, max = 15, message = "Invalid password! (6->15 character)")
+    @Size(min = 6, max = 15, message = "Mật khẩu không hợp lệ! (6->15 ký tự)")
     private String password;
-    @Size(min = 6, max = 15, message = "Invalid password! (6->15 character)")
+    @Size(min = 6, max = 15, message = "Mật khẩu không hợp lệ! (6->15 ký tự)")
     private String repeatPassword;
+    @NotEmpty(message = "Không được bỏ trống")
+    private String firstName;
+    @NotEmpty(message = "Không được bỏ trống")
+    private String lastName;
 }

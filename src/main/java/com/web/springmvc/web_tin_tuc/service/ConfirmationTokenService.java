@@ -21,4 +21,11 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
+    public ConfirmationToken getTokenByUserId(Integer id) {
+        return confirmationTokenRepository.findByUserId(id);
+    }
+
+    public void deleteTokenById(Long id) {
+        confirmationTokenRepository.deleteById(id);
+    }
 }

@@ -1,12 +1,16 @@
 package com.web.springmvc.web_tin_tuc.service;
 
 import com.web.springmvc.web_tin_tuc.dto.CategoryDTO;
+import com.web.springmvc.web_tin_tuc.dto.NewsDTO;
 import com.web.springmvc.web_tin_tuc.exception.CategoryNotFoundException;
 import com.web.springmvc.web_tin_tuc.model.Category;
+import com.web.springmvc.web_tin_tuc.model.News;
 import com.web.springmvc.web_tin_tuc.repository.CategoryRepository;
+import com.web.springmvc.web_tin_tuc.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,7 +18,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
+    private final NewsRepository newsRepository;
 
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = categoryRepository.save(mapToEntity(categoryDTO));
@@ -29,8 +33,19 @@ public class CategoryService {
         return categoryRepository.findByCode(code).getId();
     }
 
-    public List<CategoryDTO> getAllCategory() {
-        return categoryRepository.findAll().stream().map(this::mapToDTO).toList();
+    public List<Category> getAllCategory() {
+        return categoryRepository.findAll();
+    }
+
+    public List<NewsDTO> setCategoryName(List<NewsDTO> news) {
+        List<NewsDTO>lt = new ArrayList<>();
+        for(int i = 0; i < news.size(); i++) {
+            NewsDTO na = news.get(i);
+            Category category = categoryRepository.findById(na.getCategory()).orElseThrow(()->new CategoryNotFoundException("Not found category"));
+            na.setCategoryName(category.getName());
+            lt.add(na);
+        }
+        return lt;
     }
 
     public void deleteCategory(Integer id) {

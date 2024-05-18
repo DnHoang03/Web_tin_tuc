@@ -24,5 +24,12 @@ public interface NewsRepository extends JpaRepository<News, Integer> {
     News findByTitle(String title);
 
     @Query("SELECT c FROM News c WHERE c.accepted = false ORDER BY c.createdDate DESC")
-    News findUnacceptedNews();
+    Page<News> findUnacceptedNews(Pageable pageable);
+
+    @Query("SELECT c FROM News c WHERE c.accepted = true AND c.category.code != 'THE-GIOI' ORDER BY c.createdDate DESC")
+    Page<News> findBestNews(Pageable pageable);
+
+    @Query("SELECT c FROM News c WHERE c.accepted = true AND c.category.code = :code ORDER BY c.createdDate DESC")
+    List<News> findByCategoryCode(String code);
+
 }

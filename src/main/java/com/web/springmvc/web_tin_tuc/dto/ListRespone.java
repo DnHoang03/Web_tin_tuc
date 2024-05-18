@@ -6,8 +6,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class NewsRespone {
-    private List<NewsDTO> content;
+public class ListRespone<T> {
+    private List<T> content;
     private int pageNumber;
     private int pageSize;
     private long totalElement;

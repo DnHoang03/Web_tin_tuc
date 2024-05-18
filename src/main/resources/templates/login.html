@@ -11,11 +11,12 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div th:if="${param.success}" class="alert alert-success">You are register successfully!</div>
-                    <div th:if="${param.error}" class="alert alert-danger">Username or password is incorrect!</div>
-                    <div th:if="${param.disabled}" class="alert alert-danger">Account is disabled!</div>
-                    <div th:if="${param.logout}" class="alert alert-danger">Logout successfully!</div>
-                    <div th:if="${param.authenSuccess}" class="alert alert-success">Account is enabled!</div>
+                    <div th:if="${param.success}" class="alert alert-success">Đăng ký thành công!</div>
+                    <div th:if="${param.error}" class="alert alert-danger">Tên đăng nhập hoặc mật khẩu không đúng!</div>
+                    <div th:if="${param.disabled}" class="alert alert-danger">Tài khoản chưa kích hoạt!</div>
+                    <div th:if="${param.logout}" class="alert alert-success">Đăng xuất thành công!</div>
+                    <div th:if="${param.authenSuccess}" class="alert alert-success">Tài khoản đã được kích hoạt!</div>
+                    <div th:if="${param.rs_success}" class="alert alert-success">Đổi mật khẩu thành công!</div>
                     <form role="form" method="post" th:action="@{/auth/login}" >
                         <!-- Username input -->
                         <div data-mdb-input-init class="form-outline mb-4">
@@ -39,14 +40,14 @@
                         </div>
 
                         <!-- Submit button -->
-                        <button type="submit" value="Log in" class="btn btn-primary btn-block mb-2">Sign in</button>
+                        <button type="submit" value="Log in" class="btn btn-primary btn-block mb-2">Đăng nhập</button>
                         <div class="row justify-content-center mb-2">
                             <div class="col">
                                 <!-- Simple link -->
-                                <a href="#!">Forgot password?</a>
+                                <a th:href="@{/auth/forgot-password}">Quên mật khẩu?</a>
                             </div>
-                            <div class="col ">
-                                <p class="text-left">Not a member? <a th:href="@{/auth/register}">Register</a></p>
+                            <div class="col offset-4">
+                                <a th:href="@{/auth/register}">Đăng ký</a></p>
                             </div>
                         </div>
                     </form>

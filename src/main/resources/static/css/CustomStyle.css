@@ -36,3 +36,7 @@
     border-image: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /* Gradient từ màu đen đậm đến trong suốt */
     border-image-slice: 1; /* Cắt gradient */
 }
+
+.icon-large {
+
+}

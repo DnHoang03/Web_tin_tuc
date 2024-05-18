@@ -22,9 +22,10 @@ public class NewsDTO {
     private String thumbnail;
     @NotEmpty(message = "News content should not be empty")
     private String content;
-    @Size(min=10, max=150,message = "News title should not be empty (10->150 character)")
+    @Size(min=10, max=300,message = "News title should not be empty (10->150 character)")
     private String shortDescription;
-    private int category;
+    private Integer category;
+    private String categoryName;
     private Boolean accepted = false;
     private User user;
     private String createdDate;

@@ -18,7 +18,7 @@ public class RegistrationService {
     private final UserService userService;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     public void register(RegistrationRequest request) {
-        userService.register(new User(request.getUsername(), request.getEmail(), request.getPassword(), Role.USER));
+        userService.register(new User(request.getUsername(), request.getEmail(), request.getPassword(), Role.USER, request.getFirstName(), request.getLastName()));
     }
 
     public void confirmToken(String token) {
@@ -38,6 +38,6 @@ public class RegistrationService {
         }
         confirmationToken.setConfirmedAt(LocalDateTime.now());
         confirmationTokenRepository.save(confirmationToken);
-        userService.verifyToken(confirmationToken);
+        userService.verifyConfirmationToken(confirmationToken);
     }
 }

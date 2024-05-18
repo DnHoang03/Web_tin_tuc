@@ -2,12 +2,10 @@ package com.web.springmvc.web_tin_tuc.controller;
 
 import com.web.springmvc.web_tin_tuc.config.SecurityUtil;
 import com.web.springmvc.web_tin_tuc.dto.*;
-import com.web.springmvc.web_tin_tuc.model.User;
+import com.web.springmvc.web_tin_tuc.model.Category;
 import com.web.springmvc.web_tin_tuc.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,11 +22,10 @@ public class NewsController {
     private final CategoryService categoryService;
     private final UserService userService;
     private final CommentService commentService;
-    private final NewsScrapService newsScrapService;
     @GetMapping
     public String getAllNews(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber
-            ,@RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize
+            ,@RequestParam(value = "pageSize", defaultValue = "8", required = false)int pageSize
             ,Model model) {
         UserDTO user = new UserDTO();
         String username = SecurityUtil.getSessionUser();
@@ -37,23 +34,24 @@ public class NewsController {
         }
         newsService.createScrapNews();
 //        newsScrapService.getFirstNews();
-        NewsRespone newsRespone = newsService.getAllNews(pageNumber, pageSize);
-        List<NewsDTO>news = newsRespone.getContent();
+        ListRespone listRespone = newsService.getAllBestNews(pageNumber, pageSize);
+        List<NewsDTO>news = listRespone.getContent();
         model.addAttribute("news",news);
         model.addAttribute("user", user);
         model.addAttribute("newsCT", newsService.getOneNewsByCode("CHINH-TRI"));
         model.addAttribute("newsGT", newsService.getOneNewsByCode("GIAI-TRI"));
         model.addAttribute("newsSK", newsService.getOneNewsByCode("SUC-KHOE"));
-        model.addAttribute("totalItems", newsRespone.getTotalElement());
-        model.addAttribute("totalPages", newsRespone.getTotalPage());
+        model.addAttribute("globalNews", newsService.getNewsByCode("THE-GIOI"));
+        model.addAttribute("totalItems", listRespone.getTotalElement());
+        model.addAttribute("totalPages", listRespone.getTotalPage());
         model.addAttribute("pageNumber", pageNumber);
-        return "news-list";
+        return "news/news-list";
     }
 
     @GetMapping("/category/{category}")
     public String getNewsByCategory(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber
-            ,@RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize
+            ,@RequestParam(value = "pageSize", defaultValue = "8", required = false)int pageSize
             ,Model model
             ,@PathVariable(value = "category") String category) {
         UserDTO user = new UserDTO();
@@ -62,17 +60,17 @@ public class NewsController {
             user = userService.getUserByUsername(username);
         }
         int id = categoryService.getCategoryIdByCode(category);
-        NewsRespone newsRespone = newsService.getNewsByCategoryId(pageNumber, pageSize, id);
-        List<NewsDTO>news = newsRespone.getContent();
+        ListRespone listRespone = newsService.getNewsByCategoryId(pageNumber, pageSize, id);
+        List<NewsDTO>news = listRespone.getContent();
         model.addAttribute("news",news);
         model.addAttribute("user", user);
         model.addAttribute("newsCT", newsService.getOneNewsByCode("CHINH-TRI"));
         model.addAttribute("newsGT", newsService.getOneNewsByCode("GIAI-TRI"));
         model.addAttribute("newsSK", newsService.getOneNewsByCode("SUC-KHOE"));
-        model.addAttribute("totalItems", newsRespone.getTotalElement());
-        model.addAttribute("totalPages", newsRespone.getTotalPage());
+        model.addAttribute("totalItems", listRespone.getTotalElement());
+        model.addAttribute("totalPages", listRespone.getTotalPage());
         model.addAttribute("pageNumber", pageNumber);
-        return "news-list-category";
+        return "news/news-list-category";
     }
 
     @GetMapping("/create")
@@ -81,11 +79,11 @@ public class NewsController {
         if(username == null) {
             return "redirect:/auth/login";
         }
-        List<CategoryDTO> categoryDTOS = categoryService.getAllCategory();
+        List<Category> categoryDTOS = categoryService.getAllCategory();
         NewsDTO newsDTO = new NewsDTO();
         model.addAttribute("newsDTO",newsDTO);
         model.addAttribute("categories", categoryDTOS);
-        return "news-create";
+        return "news/news-create";
     }
 
     @PostMapping("/create")
@@ -103,22 +101,22 @@ public class NewsController {
     public String searchNews(@RequestParam(value = "query") String query,
                              Model model,
                              @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-                             @RequestParam(value = "pageSize", defaultValue = "6", required = false)int pageSize) {
+                             @RequestParam(value = "pageSize", defaultValue = "8", required = false)int pageSize) {
         UserDTO user = new UserDTO();
         String username = SecurityUtil.getSessionUser();
         if(username != null) {
             user = userService.getUserByUsername(username);
         }
-        NewsRespone newsRespone = newsService.searchNewsByTitle(pageNumber, pageSize, query);
-        model.addAttribute("news",newsRespone.getContent());
+        ListRespone listRespone = newsService.searchNewsByTitle(pageNumber, pageSize, query);
+        model.addAttribute("news", listRespone.getContent());
         model.addAttribute("user", user);
         model.addAttribute("newsCT", newsService.getOneNewsByCode("CHINH-TRI"));
         model.addAttribute("newsGT", newsService.getOneNewsByCode("GIAI-TRI"));
         model.addAttribute("newsSK", newsService.getOneNewsByCode("SUC-KHOE"));
-        model.addAttribute("totalItems", newsRespone.getTotalElement());
-        model.addAttribute("totalPages", newsRespone.getTotalPage());
+        model.addAttribute("totalItems", listRespone.getTotalElement());
+        model.addAttribute("totalPages", listRespone.getTotalPage());
         model.addAttribute("pageNumber", pageNumber);
-        return "news-list";
+        return "news/news-list";
     }
 
     @GetMapping("/{id}/edit")
@@ -132,10 +130,10 @@ public class NewsController {
         if(newsDTO.getUser().getId() != user.getId()) {
             return "redirect:/news";
         }
-        List<CategoryDTO> categoryDTOS = categoryService.getAllCategory();
+        List<Category> categoryDTOS = categoryService.getAllCategory();
         model.addAttribute("newsDTO", newsDTO);
         model.addAttribute("categories", categoryDTOS);
-        return "news-edit";
+        return "news/news-edit";
     }
 
     @PostMapping("/{id}/edit")
@@ -161,7 +159,7 @@ public class NewsController {
         model.addAttribute("comments", comments);
         model.addAttribute("comment", commentDTO);
         model.addAttribute("user", user);
-        return "news-detail.html";
+        return "news/news-detail";
     }
 
     @PostMapping("/{id}")
