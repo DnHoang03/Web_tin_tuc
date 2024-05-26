@@ -88,7 +88,7 @@ public class NewsController {
 
     @PostMapping("/create")
     public String createNews(@Valid @ModelAttribute("newsDTO") NewsDTO newsDTO, BindingResult result) {
-        if(result.hasErrors()) return "news-create";
+        if(result.hasErrors()) return "news/news-create";
         NewsDTO newsCreated = newsService.createNews(newsDTO);
         if(newsCreated.getAccepted().equals(false)) {
             return "redirect:/news/create?waiting";

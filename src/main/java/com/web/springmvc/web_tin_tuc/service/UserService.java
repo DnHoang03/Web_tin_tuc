@@ -50,7 +50,7 @@ public class UserService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
 //        TODO: Send email to user with token
-        emailService.sendHtmlMessage(user.getUsername(), user.getEmail(), confirmationToken.getToken(), "email-confirmation");
+        emailService.sendHtmlMessage(user.getUsername(), user.getEmail(), confirmationToken.getToken(), "auth/email-confirmation");
     }
 
     public void sendPasswordToken(ForgotPasswordRequest forgotPasswordRequest, Integer id) {
@@ -60,7 +60,7 @@ public class UserService {
             if(confirmationTokenCheck.getConfirmedAt() != null) {
                 confirmationTokenService.deleteTokenById(confirmationTokenCheck.getId());
             } else {
-                emailService.sendResetPasswordMessage(user.getUsername(), user.getEmail(), confirmationTokenCheck.getToken(), "email-confirmation", user.getId());
+                emailService.sendResetPasswordMessage(user.getUsername(), user.getEmail(), confirmationTokenCheck.getToken(), "auth/email-confirmation", user.getId());
                 return;
             }
         }

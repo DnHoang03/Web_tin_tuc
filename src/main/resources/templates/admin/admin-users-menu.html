@@ -39,7 +39,7 @@
                                 <td th:text="${user.username}"></td>
                                 <td th:text="${user.role}"></td>
                                 <td>
-                                    <a th:href="@{/admin/users/{id}(id = ${user.id})}">
+                                    <a th:attr="data-id=${user.id}" th:id="'confirmActionBtn_' + ${user.id}" th:href="@{/admin/users/{id}(id = ${user.id})}" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setClickedUserId(this)">
                                         <i class="fas fa-trash-alt mx-4"></i>
                                     </a>
                                 </td>
@@ -51,9 +51,43 @@
 
             </div>
         </div>
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Xác nhận</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc muốn xóa tài khoản không ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmBtn">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
-
 </main>
+<script>
+    var clickedUserId; // Biến trung gian để lưu ID của phần tử đã nhấp vào
 
+    // Hàm để đặt ID của phần tử đã nhấp vào vào biến trung gian
+    function setClickedUserId(element) {
+        clickedUserId = element.getAttribute('data-id');
+    }
+
+    // Sự kiện khi nhấn nút xác nhận
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+        // Thực hiện hành động xác nhận ở đây
+        var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        confirmModal.hide();
+
+        // Lấy id của user từ biến trung gian
+        // Chuyển hướng đến địa chỉ URL của thẻ <a> tương ứng
+        window.location.href = document.getElementById('confirmActionBtn_' + clickedUserId).getAttribute('href');
+    });
+</script>
 </body>
 </html>
